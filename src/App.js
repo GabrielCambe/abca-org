@@ -1,17 +1,15 @@
+import { BrowserRouter } from 'react-router-dom';
+
+import RootRouter from './pages/routers/RootRouter';
+import Layout from './components/layout/Layout';
+
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Layout>
+        <RootRouter />
+      </Layout>
+    </BrowserRouter>
   );
 }
 

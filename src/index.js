@@ -1,17 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
+import { initializeApp } from 'firebase/app';
 
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
 
+const firebaseApp = initializeApp({
+  apiKey: 'AIzaSyC_EPGcxcIPNQmbwt8FF3OgF_LwhrUKSRw',
+  authDomain: 'exemplo-login-associacao.firebaseapp.com',
+  projectId: 'exemplo-login-associacao',
+  storageBucket: 'exemplo-login-associacao.appspot.com',
+  messagingSenderId: '529772759306',
+  appId: '1:529772759306:web:bf45b2ea4b23f10aa412f3',
+});
+
 ReactDOM.render(
-  <BrowserRouter>
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  </BrowserRouter>,
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
   document.getElementById('root')
 );
 
