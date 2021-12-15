@@ -5,7 +5,7 @@ import { Switcher, composeRoutes } from './utils';
 const Home = lazy(() => import('../home'));
 const Acoes = lazy(() => import('../acoes'));
 const Artigos = lazy(() => import('../artigos'));
-const AreaDeAtuacao = lazy(() => import('../associe-se'));
+const AreaDeAtuacao = lazy(() => import('../area-de-atuacao'));
 const AssocieSe = lazy(() => import('../associe-se'));
 const Contato = lazy(() => import('../contato'));
 const QuemSomos = lazy(() => import('../quem-somos'));

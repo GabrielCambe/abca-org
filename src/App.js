@@ -2,13 +2,16 @@ import { BrowserRouter } from 'react-router-dom';
 
 import RootRouter from './pages/routers/RootRouter';
 import Layout from './components/layout/Layout';
+import FirebaseContextProvider from './contexts/FirebaseContext';
 
 function App() {
   return (
     <BrowserRouter>
-      <Layout>
-        <RootRouter />
-      </Layout>
+      <FirebaseContextProvider>
+        <Layout>
+          <RootRouter />
+        </Layout>
+      </FirebaseContextProvider>
     </BrowserRouter>
   );
 }

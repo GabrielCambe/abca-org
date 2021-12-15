@@ -23,6 +23,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "deploy": "react-scripts build && firebase deploy",
+    "deploy-firestore-rules": "firebase deploy --only firestore:rules",
     "build-antd": "lessc --js src/styles/antd-src.less > src/styles/antd-build.css"
   },
   "eslintConfig": {
