@@ -1,7 +1,7 @@
 import React from 'react';
 import { Select } from 'antd';
 
-import { StyledSelect } from './styles';
+import { StyledSelect } from '../styles';
 
 export function UserRoleSelect({ ...props }) {
   const user_role_list = [

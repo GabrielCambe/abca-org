@@ -1,13 +1,25 @@
-import { createContext, useContext, useRef } from 'react';
+import { createContext, useContext, useRef, useCallback } from 'react';
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDoc,
+  getDocs,
+  doc,
+  query,
+  where,
+} from 'firebase/firestore';
 import { message } from 'antd';
 
 import { dropUndefinedFields } from '../utils';
 
 const firebaseContext = createContext({
   firebaseApp: undefined,
+  firestore: undefined,
   firestorePost: undefined,
+  firestoreGet: undefined,
+  firestoreList: undefined,
 });
 
 const Provider = firebaseContext.Provider;
@@ -24,56 +36,78 @@ export default function FirebaseContextProvider({ children }) {
     })
   );
 
-  const firestore = getFirestore(firebaseApp.current);
+  // ligage4064@wolfpat.com
+  const firestore = useRef(getFirestore(firebaseApp.current));
 
-  /**
-   * Adiciona um novo document na firestore com os valores do objeto "values",
-   * caso esse objeto esteja vazio nenhum documento é criado.
-   *
-   * @param {string} collectionPath - Caminho da coleção na qual o documento deve ser criado na firestore.
-   * @param {object} values - Objeto com os valores dos campos do novo documento.
-   * @param {object} extra_values - Objeto com os valores extras a serem concatenados com o objeto values.
-   */
-  const firestorePost = async (collectionPath, values, extra_values = {}) => {
-    dropUndefinedFields(values);
+  const firestorePost = useCallback(
+    async (collectionPath, values, extra_values = {}) => {
+      dropUndefinedFields(values);
 
-    if (Object.keys(values).length === 0) {
-      message.warning('Não é possível criar um documento vazio!');
-      return undefined;
+      if (Object.keys(values).length === 0) {
+        message.warning('Não é possível criar um documento vazio!');
+        return undefined;
+      }
+
+      values = { ...values, ...extra_values };
+
+      const collectionRef = collection(firestore.current, collectionPath);
+
+      try {
+        const response = await addDoc(collectionRef, values);
+        message.success('Documento criado com sucesso!');
+        return response;
+      } catch (error) {
+        console.error(error);
+        message.error(error.message);
+        return undefined;
+      }
+    },
+    []
+  );
+
+  const firestoreGet = useCallback(async (documentPath) => {
+    const docRef = doc(firestore.current, documentPath);
+    const docSnap = await getDoc(docRef);
+    let data = {};
+    if (docSnap.exists()) {
+      data = docSnap.data();
     }
+    return data;
+  }, []);
 
-    values = { ...values, ...extra_values };
-
-    const collectionRef = collection(firestore, collectionPath);
-
-    try {
-      const response = await addDoc(collectionRef, values);
-      message.success('Documento criado com sucesso!');
-      return response;
-    } catch (error) {
-      console.error(error);
-      message.error(error.message);
-      return undefined;
+  const firestoreList = useCallback(async (collectionPath, whereStr) => {
+    const collectionRef = collection(firestore.current, collectionPath);
+    const listQuery = query(
+      collectionRef,
+      where(
+        whereStr.split(' ')[0],
+        whereStr.split(' ')[1],
+        whereStr.split(' ')[2]
+      )
+    );
+    const querySnapshot = await getDocs(listQuery);
+    let data = [];
+    if (!querySnapshot.empty) {
+      querySnapshot.forEach((docSnap) => data.push(docSnap.data()));
     }
-  };
-
-  // const firestorePatch = async (docPath, values) => {
-  //   const docRef = doc(firestore, docPath);
-  //   try {
-  //     await setDoc(docRef, values);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+    return data;
+  }, []);
 
   return (
-    <Provider value={{ firebaseApp: firebaseApp.current, firestorePost }}>
+    <Provider
+      value={{
+        firebaseApp: firebaseApp.current,
+        firestore: firestore.current,
+        firestorePost,
+        firestoreGet,
+        firestoreList,
+      }}
+    >
       {children}
     </Provider>
   );
 }
 
 export function useFirebase() {
-  const { firebaseApp, firestorePost } = useContext(firebaseContext);
-  return { firebaseApp, firestorePost };
+  return useContext(firebaseContext);
 }

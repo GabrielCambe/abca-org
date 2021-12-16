@@ -9,8 +9,8 @@ export default function RootRouter() {
   return (
     <Switch>
       <Redirect from="/:url*(/+)" to={location.pathname.slice(0, -1)} />
-      <Route path={publicRoutes} component={PublicSwitcher} />
       <Route path={privateRoutes} component={PrivateSwitcher} />
+      <Route path={publicRoutes} component={PublicSwitcher} />
     </Switch>
   );
 }

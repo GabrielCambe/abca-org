@@ -7,9 +7,13 @@ const { Content } = AntdLayout;
 
 function Layout({ children }) {
   return (
-    <AntdLayout>
+    <AntdLayout style={{ maxHeight: '100vh' }}>
       <Navbar />
-      <Content style={{ padding: '0 50px', marginTop: 64 }}>{children}</Content>
+      <AntdLayout>
+        <Content style={{ padding: '0 50px', marginTop: 64, overflow: 'auto' }}>
+          {children}
+        </Content>
+      </AntdLayout>
     </AntdLayout>
   );
 }

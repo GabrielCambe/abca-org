@@ -4,7 +4,7 @@ import { Form, Button } from 'antd';
 import { useFirebase } from '../../../contexts/FirebaseContext';
 import { UserTypeSelect, UFSelect } from './selects';
 
-import { StyledInput } from './styles';
+import { StyledInput } from '../styles';
 
 export default function PreUserAssociationForm() {
   const { firestorePost } = useFirebase();
@@ -48,7 +48,9 @@ export default function PreUserAssociationForm() {
           {field.component || <StyledInput />}
         </Form.Item>
       ))}
-      <Button onClick={() => form.submit()}>Enviar</Button>
+      <Button type="primary" onClick={() => form.submit()}>
+        Enviar
+      </Button>
     </Form>
   );
 }

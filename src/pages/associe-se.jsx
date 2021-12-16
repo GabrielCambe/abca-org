@@ -5,7 +5,6 @@ import PreUserAssociationForm from '../components/forms/PreUserAssociationForm/i
 export default function AssocieSe() {
   return (
     <div>
-      <div>AssocieSe</div>
       <PreUserAssociationForm />
     </div>
   );

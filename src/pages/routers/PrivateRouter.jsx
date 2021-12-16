@@ -2,11 +2,11 @@ import { lazy } from 'react';
 
 import { Switcher, composeRoutes } from './utils';
 
-const AreaAssociado = lazy(() => import('../area-associado'));
+const AreaAssociado = lazy(() => import('../area-associade'));
 const AreaGestao = lazy(() => import('../area-gestao'));
 
 const routes = composeRoutes([
-  { path: '/area-associado', component: AreaAssociado, isPrivate: true },
+  { path: '/area-associade', component: AreaAssociado, isPrivate: true },
   { path: '/area-gestao', component: AreaGestao, isPrivate: true },
 ]);
 

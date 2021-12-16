@@ -9,8 +9,10 @@ const AreaDeAtuacao = lazy(() => import('../area-de-atuacao'));
 const AssocieSe = lazy(() => import('../associe-se'));
 const Contato = lazy(() => import('../contato'));
 const QuemSomos = lazy(() => import('../quem-somos'));
+const Login = lazy(() => import('../login'));
 
 const routes = composeRoutes([
+  { path: '/login', component: Login },
   { path: '/acoes', component: Acoes },
   { path: '/artigos', component: Artigos },
   { path: '/area-de-atuacao', component: AreaDeAtuacao },
