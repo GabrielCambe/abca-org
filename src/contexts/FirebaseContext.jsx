@@ -2,10 +2,12 @@ import { createContext, useContext, useRef, useCallback } from 'react';
 import { initializeApp } from 'firebase/app';
 import {
   getFirestore,
+  connectFirestoreEmulator,
   collection,
   addDoc,
   getDoc,
   getDocs,
+  deleteDoc,
   doc,
   query,
   where,
@@ -20,6 +22,7 @@ const firebaseContext = createContext({
   firestorePost: undefined,
   firestoreGet: undefined,
   firestoreList: undefined,
+  firestoreDelete: undefined,
 });
 
 const Provider = firebaseContext.Provider;
@@ -36,8 +39,13 @@ export default function FirebaseContextProvider({ children }) {
     })
   );
 
-  // ligage4064@wolfpat.com
   const firestore = useRef(getFirestore(firebaseApp.current));
+  if (window.location.hostname === 'localhost') {
+    console.log(
+      "connectFirestoreEmulator(firestore.current, 'localhost', 8080)"
+    );
+    connectFirestoreEmulator(firestore.current, 'localhost', 8080);
+  }
 
   const firestorePost = useCallback(
     async (collectionPath, values, extra_values = {}) => {
@@ -93,6 +101,16 @@ export default function FirebaseContextProvider({ children }) {
     return data;
   }, []);
 
+  const firestoreDelete = useCallback(async (documentPath) => {
+    const docRef = doc(firestore.current, documentPath);
+    try {
+      await deleteDoc(docRef);
+    } catch (error) {
+      message.error(error.message);
+    }
+    return;
+  }, []);
+
   return (
     <Provider
       value={{
@@ -101,6 +119,7 @@ export default function FirebaseContextProvider({ children }) {
         firestorePost,
         firestoreGet,
         firestoreList,
+        firestoreDelete,
       }}
     >
       {children}

@@ -19,12 +19,13 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && react-scripts build-antd",
+    "build-antd": "lessc --js src/styles/antd-src.less > src/styles/antd-build.css",
+    "build": "react-scripts build-antd && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "start-firebase-emulators": "firebase emulators:start --import=.firebase_emulator_data --export-on-exit=.firebase_emulator_data",
     "deploy": "react-scripts build && firebase deploy",
-    "deploy-firestore-rules": "firebase deploy --only firestore:rules",
-    "build-antd": "lessc --js src/styles/antd-src.less > src/styles/antd-build.css"
+    "deploy-firestore-rules": "firebase deploy --only firestore:rules"
   },
   "eslintConfig": {
     "extends": [

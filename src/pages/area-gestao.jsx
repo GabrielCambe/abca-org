@@ -53,7 +53,7 @@ export default function AreaGestao() {
       // title: 'Confirmar Associação',
       key: 'action',
       render: (text, record) => (
-        <Button type="primary" size="small">
+        <Button type="primary" size="small" onClick={() => console.log(record)}>
           Confirmar Associação
         </Button>
       ),

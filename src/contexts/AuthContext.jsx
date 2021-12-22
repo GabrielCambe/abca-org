@@ -6,6 +6,7 @@ import {
   useEffect,
 } from 'react';
 import {
+  connectAuthEmulator,
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -26,10 +27,18 @@ const authContext = createContext({
 const Provider = authContext.Provider;
 
 export default function AuthContextProvider({ children }) {
-  const { firebaseApp, firestoreGet } = useFirebase();
-  const firebaseAuth = getAuth(firebaseApp);
-  const [authUser, setAuthUser] = useState();
   const history = useHistory();
+  const [authUser, setAuthUser] = useState();
+
+  const { firebaseApp, firestoreGet } = useFirebase();
+
+  const firebaseAuth = getAuth(firebaseApp);
+  if (window.location.hostname === 'localhost') {
+    console.log("connectAuthEmulator(firebaseAuth, 'http://localhost:9099')");
+    connectAuthEmulator(firebaseAuth, 'http://localhost:9099', {
+      disableWarnings: true,
+    });
+  }
 
   const authStateListener = useCallback(async () => {
     onAuthStateChanged(firebaseAuth, async (user) => {
