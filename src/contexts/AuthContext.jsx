@@ -4,7 +4,7 @@ import {
   useCallback,
   useState,
   useEffect,
-} from 'react';
+} from "react";
 import {
   connectAuthEmulator,
   getAuth,
@@ -12,16 +12,17 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
-} from 'firebase/auth';
-import { message } from 'antd';
-import { useHistory } from 'react-router-dom';
+} from "firebase/auth";
+import { message } from "antd";
+import { useHistory } from "react-router-dom";
 
-import { useFirebase } from './FirebaseContext';
+import { useFirebase } from "./FirebaseContext";
 
 const authContext = createContext({
   logIn: undefined,
   logOut: undefined,
   authUser: undefined,
+  createUser: undefined,
 });
 
 const Provider = authContext.Provider;
@@ -39,6 +40,10 @@ export default function AuthContextProvider({ children }) {
       disableWarnings: true,
     });
   }
+
+  const createUser = useCallback(async (email) => {
+    const response = await createUserWithEmailAndPassword(email, "abca12345");
+  }, []);
 
   const authStateListener = useCallback(async () => {
     onAuthStateChanged(firebaseAuth, async (user) => {
@@ -64,8 +69,8 @@ export default function AuthContextProvider({ children }) {
           values.email,
           values.password
         );
-        console.log('userCredential: ', userCredental);
-        history.push('/');
+        console.log("userCredential: ", userCredental);
+        history.push("/");
       } catch (error) {
         console.error(error);
         message.error(error.message);
@@ -78,7 +83,7 @@ export default function AuthContextProvider({ children }) {
   const logOut = useCallback(async () => {
     try {
       signOut(firebaseAuth);
-      history.push('/');
+      history.push("/");
     } catch (error) {
       console.error(error);
       message.error(error.message);
@@ -86,7 +91,11 @@ export default function AuthContextProvider({ children }) {
     return;
   }, [firebaseAuth, history]);
 
-  return <Provider value={{ logIn, logOut, authUser }}>{children}</Provider>;
+  return (
+    <Provider value={{ createUser, logIn, logOut, authUser }}>
+      {children}
+    </Provider>
+  );
 }
 
 export function useAuth() {

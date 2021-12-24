@@ -1,5 +1,5 @@
-import { createContext, useContext, useRef, useCallback } from 'react';
-import { initializeApp } from 'firebase/app';
+import { createContext, useContext, useRef, useCallback } from "react";
+import { initializeApp } from "firebase/app";
 import {
   getFirestore,
   connectFirestoreEmulator,
@@ -11,10 +11,10 @@ import {
   doc,
   query,
   where,
-} from 'firebase/firestore';
-import { message } from 'antd';
+} from "firebase/firestore";
+import { message } from "antd";
 
-import { dropUndefinedFields } from '../utils';
+import { dropUndefinedFields } from "../utils";
 
 const firebaseContext = createContext({
   firebaseApp: undefined,
@@ -30,21 +30,21 @@ const Provider = firebaseContext.Provider;
 export default function FirebaseContextProvider({ children }) {
   const firebaseApp = useRef(
     initializeApp({
-      apiKey: 'AIzaSyC_EPGcxcIPNQmbwt8FF3OgF_LwhrUKSRw',
-      authDomain: 'exemplo-login-associacao.firebaseapp.com',
-      projectId: 'exemplo-login-associacao',
-      storageBucket: 'exemplo-login-associacao.appspot.com',
-      messagingSenderId: '529772759306',
-      appId: '1:529772759306:web:bf45b2ea4b23f10aa412f3',
+      apiKey: "AIzaSyC_EPGcxcIPNQmbwt8FF3OgF_LwhrUKSRw",
+      authDomain: "exemplo-login-associacao.firebaseapp.com",
+      projectId: "exemplo-login-associacao",
+      storageBucket: "exemplo-login-associacao.appspot.com",
+      messagingSenderId: "529772759306",
+      appId: "1:529772759306:web:bf45b2ea4b23f10aa412f3",
     })
   );
 
   const firestore = useRef(getFirestore(firebaseApp.current));
-  if (window.location.hostname === 'localhost') {
+  if (window.location.hostname === "localhost") {
     console.log(
       "connectFirestoreEmulator(firestore.current, 'localhost', 8080)"
     );
-    connectFirestoreEmulator(firestore.current, 'localhost', 8080);
+    connectFirestoreEmulator(firestore.current, "localhost", 8080);
   }
 
   const firestorePost = useCallback(
@@ -52,7 +52,7 @@ export default function FirebaseContextProvider({ children }) {
       dropUndefinedFields(values);
 
       if (Object.keys(values).length === 0) {
-        message.warning('Não é possível criar um documento vazio!');
+        message.warning("Não é possível criar um documento vazio!");
         return undefined;
       }
 
@@ -62,7 +62,7 @@ export default function FirebaseContextProvider({ children }) {
 
       try {
         const response = await addDoc(collectionRef, values);
-        message.success('Documento criado com sucesso!');
+        message.success("Documento criado com sucesso!");
         return response;
       } catch (error) {
         console.error(error);
@@ -88,9 +88,9 @@ export default function FirebaseContextProvider({ children }) {
     const listQuery = query(
       collectionRef,
       where(
-        whereStr.split(' ')[0],
-        whereStr.split(' ')[1],
-        whereStr.split(' ')[2]
+        whereStr.split(" ")[0],
+        whereStr.split(" ")[1],
+        whereStr.split(" ")[2]
       )
     );
     const querySnapshot = await getDocs(listQuery);
@@ -105,7 +105,9 @@ export default function FirebaseContextProvider({ children }) {
     const docRef = doc(firestore.current, documentPath);
     try {
       await deleteDoc(docRef);
+      message.success("Documento deletado com sucesso!");
     } catch (error) {
+      console.error(error);
       message.error(error.message);
     }
     return;
